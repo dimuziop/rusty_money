@@ -1,3 +1,5 @@
+#[cfg(feature = "serde")]
+use serde::{Deserialize, Serialize};
 use crate::currency::FormattableCurrency;
 use crate::format::{Formatter, Params, Position};
 use crate::locale::LocalFormat;
@@ -15,6 +17,13 @@ use rust_decimal::Decimal;
 /// Money represents financial amounts through a Decimal (owned) and a Currency (reference).
 /// Operations on Money objects always create new instances of Money, with the exception
 /// of `round()`.
+#[cfg(not(feature = "serde"))]
+pub struct Money<'a, T: FormattableCurrency> {
+    amount: Decimal,
+    currency: &'a T,
+}
+
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[derive(Debug, PartialEq, Eq, Clone, Copy)]
 pub struct Money<'a, T: FormattableCurrency> {
     amount: Decimal,

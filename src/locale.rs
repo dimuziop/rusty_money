@@ -1,9 +1,12 @@
+#[cfg(feature = "serde")]
+use serde::{Deserialize, Serialize};
 use std::str::FromStr;
 
 /// Enumerates regions which have unique formatting standards for Currencies.
 ///
 /// Each Locale maps 1:1 to a LocalFormat, which contains the characteristics for formatting.
 #[derive(Debug, PartialEq, Eq, Clone, Copy, Hash)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 pub enum Locale {
     EnUs,
     EnIn,
@@ -13,6 +16,7 @@ pub enum Locale {
 
 /// Stores currency formatting metadata for a specific region (e.g. EN-US).
 #[derive(Debug, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 pub struct LocalFormat {
     pub name: &'static str,
     pub digit_separator: char,

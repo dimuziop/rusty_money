@@ -1,3 +1,5 @@
+#[cfg(feature = "serde")]
+use serde::{Deserialize, Serialize};
 use crate::Locale;
 
 #[cfg(feature = "crypto")]
@@ -11,7 +13,23 @@ mod iso_currencies;
 pub use iso_currencies::iso;
 
 /// Pre-requisite for a Currency to be accepted by a Money.
+#[cfg(not(feature = "serde"))]
 pub trait FormattableCurrency: PartialEq + Eq + Copy {
+    fn to_string(&self) -> String;
+
+    fn exponent(&self) -> u32;
+
+    fn code(&self) -> &'static str;
+
+    fn locale(&self) -> Locale;
+
+    fn symbol(&self) -> &'static str;
+
+    fn symbol_first(&self) -> bool;
+}
+
+#[cfg(feature = "serde")]
+pub trait FormattableCurrency: PartialEq + Eq + Copy + Serialize + Deserialize<'static> {
     fn to_string(&self) -> String;
 
     fn exponent(&self) -> u32;
